@@ -1,0 +1,1 @@
+Built from the uploaded VF Character Pages archive. 56 requested characters have complete saved HTML pages with their local companion assets. 7 were missing their HTML profile content in the archive; their pages were reconstructed only where official-source research supported the information. No unsupported profile facts were invented.
