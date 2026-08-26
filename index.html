@@ -3,75 +3,790 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VeeFriends Character Library</title>
+<title>VeeFriends Offline Character Explorer</title>
 <style>
-:root {
-  --purple:#7b3ff2; --pink:#ff4f9a; --green:#20c997; --yellow:#ffd83d;
-  --ink:#171717; --cream:#f7f4ea; --white:#fff;
-}
-* { box-sizing:border-box; }
-body { margin:0; background:var(--cream); color:var(--ink);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; }
-.hero {
-  position:relative; overflow:hidden; text-align:center; color:white;
-  padding:62px 20px 52px;
-  background:linear-gradient(135deg,var(--purple),#a54cff 45%,var(--pink));
-}
-.hero:before,.hero:after {
-  content:""; position:absolute; border-radius:50%; background:#fff2;
-}
-.hero:before { width:280px;height:280px;left:-100px;top:-120px; }
-.hero:after { width:330px;height:330px;right:-130px;bottom:-180px; }
-.logo { position:relative; z-index:1; font-weight:800; letter-spacing:.09em; font-size:13px; }
-h1 { position:relative; z-index:1; margin:18px 0 14px;
-  font-size:clamp(3rem,9vw,7rem); line-height:.88; letter-spacing:-.075em; }
-.hero p { position:relative; z-index:1; max-width:720px; margin:0 auto 28px; font-size:18px; }
-.search { position:relative; z-index:2; max-width:720px; margin:auto; }
-input { width:100%; padding:17px 20px; border:0; border-radius:16px;
-  font-size:17px; box-shadow:0 12px 32px #0002; outline:none; }
-main { max-width:1200px; margin:auto; padding:32px 20px 70px; }
-.toolbar { display:flex; justify-content:space-between; gap:15px; color:#777;
-  margin-bottom:18px; font-size:14px; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
-.card { display:block; background:var(--white); color:inherit; text-decoration:none;
-  border:1px solid #e4dfd5; border-radius:22px; padding:22px; min-height:160px;
-  box-shadow:0 4px 0 #e4dfd5; transition:transform .15s,box-shadow .15s; }
-.card:hover { transform:translateY(-4px); box-shadow:0 9px 0 #e4dfd5; }
-.bubble { width:50px;height:50px;border-radius:16px;display:grid;place-items:center;
-  color:#fff;font-weight:800;margin-bottom:20px;
-  background:linear-gradient(135deg,var(--green),var(--purple)); }
-.card:nth-child(3n) .bubble { background:linear-gradient(135deg,var(--pink),var(--purple)); }
-.card:nth-child(4n) .bubble { background:linear-gradient(135deg,var(--yellow),var(--pink)); color:#171717; }
-strong { display:block; font-size:19px; line-height:1.15; }
-span { display:block; color:#777; font-size:13px; margin-top:12px; }
-footer { text-align:center; padding:30px; color:#777; font-size:12px; }
+:root{--purple:#7040e8;--purple2:#a45cff;--pink:#ff4f9a;--green:#23c997;--yellow:#ffd94a;--ink:#171717;--muted:#6d6870;--cream:#fbf8ef;--line:#e9e2d7}
+*{box-sizing:border-box} body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.top{background:#171717;color:#fff;text-align:center;padding:9px;font-size:12px;font-weight:800;letter-spacing:.08em}
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,var(--purple),var(--purple2) 45%,var(--pink));padding:64px 20px 54px}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:#fff2}.hero:before{width:330px;height:330px;left:-120px;top:-180px}.hero:after{width:430px;height:430px;right:-190px;bottom:-300px}
+.hero-inner{position:relative;z-index:2;max-width:1200px;margin:auto}.eyebrow{font-weight:900;font-size:13px;letter-spacing:.1em}
+h1{font-size:clamp(3.3rem,9vw,7rem);line-height:.87;letter-spacing:-.075em;margin:12px 0}.hero p{font-size:18px;max-width:760px}
+.controls{max-width:1200px;margin:-26px auto 0;position:relative;z-index:4;padding:0 20px}
+.box{background:#fff;border:1px solid var(--line);box-shadow:0 12px 35px #0002;border-radius:20px;padding:18px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.box input,.box select{padding:13px;border:1px solid var(--line);border-radius:12px;background:#fff}
+main{max-width:1200px;margin:auto;padding:30px 20px 70px}.bar{display:flex;justify-content:space-between;gap:15px;color:var(--muted);font-size:14px;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:17px}
+.card{display:block;background:#fff;border:1px solid var(--line);border-radius:24px;overflow:hidden;color:inherit;text-decoration:none;box-shadow:0 5px 0 #e8e0d5;transition:.15s}
+.card:hover{transform:translateY(-4px)}.art{height:215px;background:linear-gradient(145deg,#f0e9ff,#fff0f7);display:grid;place-items:center;overflow:hidden}
+.art img{max-width:100%;max-height:100%;object-fit:contain}.placeholder{font-size:64px;font-weight:900;color:var(--purple)}
+.body{padding:18px}.pill{display:inline-block;background:#efe8ff;color:var(--purple);font-size:11px;font-weight:900;padding:6px 9px;border-radius:999px}
+h3{font-size:20px;line-height:1.1;margin:11px 0 4px}.body p{margin:0;color:var(--muted);font-size:13px}.offline{display:block;margin-top:12px;color:#20885f;font-size:11px;font-weight:800}
+.empty{display:none;text-align:center;padding:60px;color:var(--muted)}
+@media(max-width:700px){.box{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header class="hero">
-  <div class="logo">VEEFRIENDS CHARACTER LIBRARY</div>
-  <h1>Meet Your<br>VeeFriends</h1>
-  <p>Explore your complete offline collection of 69 supplied character pages.</p>
-  <div class="search"><input id="q" type="search" placeholder="Search characters…" aria-label="Search characters"></div>
-</header>
-<main>
-  <div class="toolbar">
-    <span id="count">69 characters</span>
-    <span>100% local • works offline</span>
+<div class="top">100% OFFLINE • 62 SAVED CHARACTER PAGES CAPTURED BY FILENAME</div>
+<header class="hero"><div class="hero-inner"><div class="eyebrow">VEEFRIENDS CHARACTER EXPLORER</div><h1>Meet Your<br>VeeFriends.</h1><p>This build uses the saved HTML filenames and paired <code>_files</code> folders as the source of truth, rather than trying to infer page type from profile text.</p></div></header>
+<div class="controls"><div class="box">
+<input id="q" type="search" placeholder="Search character…">
+<select id="trait"><option value="">All traits</option><option value="adaptable">Adaptable</option><option value="authentic">Authentic</option><option value="balanced">Balanced</option><option value="brave">Brave</option><option value="brilliant">Brilliant</option><option value="calm">Calm</option><option value="compassionate">Compassionate</option><option value="courageous">Courageous</option><option value="creative">Creative</option><option value="decisive">Decisive</option><option value="determind">Determind</option><option value="driven">Driven</option><option value="dynamic">Dynamic</option><option value="eager">Eager</option><option value="empathy">Empathy</option><option value="energetic">Energetic</option><option value="fearless">Fearless</option><option value="focused">Focused</option><option value="forgiving">Forgiving</option><option value="genuine">Genuine</option><option value="gracious">Gracious</option><option value="gritty">Gritty</option><option value="headstrong">Headstrong</option><option value="helpful">Helpful</option><option value="hungry">Hungry</option><option value="independent">Independent</option><option value="intuitive">Intuitive</option><option value="joyous">Joyous</option><option value="just">Just</option><option value="keen">Keen</option><option value="kind">Kind</option><option value="knowing">Knowing</option><option value="like">Like</option><option value="likeable">Likeable</option><option value="logical">Logical</option><option value="methodical">Methodical</option><option value="mindful">Mindful</option><option value="mojo">Mojo</option><option value="moral">Moral</option><option value="noble">Noble</option><option value="optimistic">Optimistic</option><option value="organized">Organized</option><option value="outgoing">Outgoing</option><option value="patient">Patient</option><option value="persistent">Persistent</option><option value="perspective">Perspective</option><option value="productive">Productive</option><option value="reflective">Reflective</option><option value="reliable">Reliable</option><option value="respectful">Respectful</option><option value="secure">Secure</option><option value="selfless">Selfless</option><option value="sharing">Sharing</option><option value="skilled">Skilled</option><option value="stoic">Stoic</option><option value="tenacious">Tenacious</option><option value="tolerant">Tolerant</option><option value="tranquil">Tranquil</option><option value="unwavering">Unwavering</option><option value="well-rounded">Well-Rounded</option><option value="whimsical">Whimsical</option><option value="willfull">Willfull</option></select>
+<select id="animal"><option value="">All animals/types</option><option value="alien">Alien</option><option value="anaconda">Anaconda</option><option value="badger">Badger</option><option value="baracuda">Baracuda</option><option value="bear">Bear</option><option value="beetle">Beetle</option><option value="bison">Bison</option><option value="catfish">Catfish</option><option value="clam">Clam</option><option value="cockatoo">Cockatoo</option><option value="crab">Crab</option><option value="dinosaur">Dinosaur</option><option value="dolphin">Dolphin</option><option value="dragon">Dragon</option><option value="duck">Duck</option><option value="eagle">Eagle</option><option value="eel">Eel</option><option value="elephant">Elephant</option><option value="fairy">Fairy</option><option value="falcon">Falcon</option><option value="frog">Frog</option><option value="ghost">Ghost</option><option value="giraffe">Giraffe</option><option value="gnome">Gnome</option><option value="hammerhead">Hammerhead</option><option value="hippo">Hippo</option><option value="iguana">Iguana</option><option value="jackal">Jackal</option><option value="jellyfish">Jellyfish</option><option value="kingfisher">Kingfisher</option><option value="leopard">Leopard</option><option value="lion">Lion</option><option value="mammoth">Mammoth</option><option value="minokawa">Minokawa</option><option value="monkey">Monkey</option><option value="mouse">Mouse</option><option value="numbat">Numbat</option><option value="octopus">Octopus</option><option value="ostrich">Ostrich</option><option value="otter">Otter</option><option value="panda">Panda</option><option value="penguin">Penguin</option><option value="pigeon">Pigeon</option><option value="puffin">Puffin</option><option value="racoon">Racoon</option><option value="rat">Rat</option><option value="rhinoceros">Rhinoceros</option><option value="skeleton">Skeleton</option><option value="slime">Slime</option><option value="sloth">Sloth</option><option value="sparrow">Sparrow</option><option value="sponge">Sponge</option><option value="squirrel">Squirrel</option><option value="toad">Toad</option><option value="tortoise">Tortoise</option><option value="turkey">Turkey</option><option value="urchin">Urchin</option><option value="warrior">Warrior</option><option value="warthog">Warthog</option><option value="wizard">Wizard</option><option value="wolf">Wolf</option><option value="worm">Worm</option></select>
+</div></div>
+<main><div class="bar"><span id="count">62 characters</span><span>All character links point to local HTML files.</span></div>
+<section class="grid">
+<a class="card" href="characters/adaptable-alien.html"
+   data-name="adaptable alien"
+   data-trait="adaptable"
+   data-animal="alien">
+  <div class="art"><img src="assets/adaptable-alien/spec_series_2026_adaptable_alient_numbered_hologram_lava.webp" alt="Adaptable Alien"></div>
+  <div class="body">
+    <span class="pill">Adaptable</span>
+    <h3>Adaptable Alien</h3>
+    <p>Alien</p>
+    <span class="offline">Saved page + assets</span>
   </div>
-  <section class="grid" id="grid"><a class="card" href="characters/all-veefriends-characters-complete-character-list-veefriends55.html"><div class="bubble">.</div><strong>._All Veefriends Characters _ Complete Character List _ Veefriends55</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-2.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-3.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-4.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-5.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-6.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-7.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-8.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-9.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-10.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-11.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-12.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-13.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-14.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-15.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-16.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-17.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-18.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-19.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-20.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-21.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-22.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-23.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-24.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-25.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-26.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-27.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-28.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-29.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-30.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-31.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-32.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-33.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-34.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-35.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-36.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-37.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-38.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-39.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-40.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-41.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-42.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-43.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-44.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-45.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-46.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-47.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-48.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-49.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-50.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-51.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-52.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-53.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-54.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-55.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-56.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-57.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-58.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-59.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-60.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-61.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-62.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-63.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/all-veefriends-characters-complete-character-list-64.html"><div class="bubble">A</div><strong>All VeeFriends Characters | Complete Character List</strong><span>Explore character →</span></a><a class="card" href="characters/driven-dragon.html"><div class="bubble">D</div><strong>Driven Dragon</strong><span>Explore character →</span></a><a class="card" href="characters/gritty-ghost.html"><div class="bubble">G</div><strong>Gritty Ghost</strong><span>Explore character →</span></a><a class="card" href="characters/logical-lion.html"><div class="bubble">L</div><strong>Logical Lion</strong><span>Explore character →</span></a><a class="card" href="characters/mindful-minokawa.html"><div class="bubble">M</div><strong>Mindful Minokawa</strong><span>Explore character →</span></a></section>
-</main>
-<footer>Offline character library created from the webpages and assets supplied by the user. VeeFriends IP belongs to its respective rights holders.</footer>
+</a>
+<a class="card" href="characters/authentic-anaconda.html"
+   data-name="authentic anaconda"
+   data-trait="authentic"
+   data-animal="anaconda">
+  <div class="art"><img src="assets/authentic-anaconda/epic-authentic-anaconda.webp" alt="Authentic Anaconda"></div>
+  <div class="body">
+    <span class="pill">Authentic</span>
+    <h3>Authentic Anaconda</h3>
+    <p>Anaconda</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/balanced-beetle.html"
+   data-name="balanced beetle"
+   data-trait="balanced"
+   data-animal="beetle">
+  <div class="art"><img src="assets/balanced-beetle/balanced-beetle.webp" alt="Balanced Beetle"></div>
+  <div class="body">
+    <span class="pill">Balanced</span>
+    <h3>Balanced Beetle</h3>
+    <p>Beetle</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/brave-bison.html"
+   data-name="brave bison"
+   data-trait="brave"
+   data-animal="bison">
+  <div class="art"><img src="assets/brave-bison/brave-bison-manifesting-shrinkwrapped.webp" alt="Brave Bison"></div>
+  <div class="body">
+    <span class="pill">Brave</span>
+    <h3>Brave Bison</h3>
+    <p>Bison</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/brilliant-baracuda.html"
+   data-name="brilliant baracuda"
+   data-trait="brilliant"
+   data-animal="baracuda">
+  <div class="art"><img src="assets/brilliant-baracuda/core-brilliant-barracuda.webp" alt="Brilliant Baracuda"></div>
+  <div class="body">
+    <span class="pill">Brilliant</span>
+    <h3>Brilliant Baracuda</h3>
+    <p>Baracuda</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/calm-clam.html"
+   data-name="calm clam"
+   data-trait="calm"
+   data-animal="clam">
+  <div class="art"><img src="assets/calm-clam/calm-clam.webp" alt="Calm Clam"></div>
+  <div class="body">
+    <span class="pill">Calm</span>
+    <h3>Calm Clam</h3>
+    <p>Clam</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/compassionate-catfish.html"
+   data-name="compassionate catfish"
+   data-trait="compassionate"
+   data-animal="catfish">
+  <div class="art"><img src="assets/compassionate-catfish/compassionate-catfish-evolving-shrinkwrapped.webp" alt="Compassionate Catfish"></div>
+  <div class="body">
+    <span class="pill">Compassionate</span>
+    <h3>Compassionate Catfish</h3>
+    <p>Catfish</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/courageous-cockatoo.html"
+   data-name="courageous cockatoo"
+   data-trait="courageous"
+   data-animal="cockatoo">
+  <div class="art"><img src="assets/courageous-cockatoo/courageous-cockatoo-classic-shrinkwrapped.webp" alt="Courageous Cockatoo"></div>
+  <div class="body">
+    <span class="pill">Courageous</span>
+    <h3>Courageous Cockatoo</h3>
+    <p>Cockatoo</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/creative-crab.html"
+   data-name="creative crab"
+   data-trait="creative"
+   data-animal="crab">
+  <div class="art"><img src="assets/creative-crab/creative-crab-evolving-shrinkwrapped.webp" alt="Creative Crab"></div>
+  <div class="body">
+    <span class="pill">Creative</span>
+    <h3>Creative Crab</h3>
+    <p>Crab</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/decisive-duck.html"
+   data-name="decisive duck"
+   data-trait="decisive"
+   data-animal="duck">
+  <div class="art"><img src="assets/decisive-duck/spec_series_2026_decisive_duck_base_hologram_auto.webp" alt="Decisive Duck"></div>
+  <div class="body">
+    <span class="pill">Decisive</span>
+    <h3>Decisive Duck</h3>
+    <p>Duck</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/determind-dolphin.html"
+   data-name="determind dolphin"
+   data-trait="determind"
+   data-animal="dolphin">
+  <div class="art"><img src="assets/determind-dolphin/instagram(1).svg" alt="Determind Dolphin"></div>
+  <div class="body">
+    <span class="pill">Determind</span>
+    <h3>Determind Dolphin</h3>
+    <p>Dolphin</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/driven-dragon.html"
+   data-name="driven dragon"
+   data-trait="driven"
+   data-animal="dragon">
+  <div class="art"><img src="assets/driven-dragon/driven-dragon-manifesting-shrinkwrapped.webp" alt="Driven Dragon"></div>
+  <div class="body">
+    <span class="pill">Driven</span>
+    <h3>Driven Dragon</h3>
+    <p>Dragon</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/dynamic-dinosaur.html"
+   data-name="dynamic dinosaur"
+   data-trait="dynamic"
+   data-animal="dinosaur">
+  <div class="art"><img src="assets/dynamic-dinosaur/dynamic-dinosaur-competing-shrinkwrapped.webp" alt="Dynamic Dinosaur"></div>
+  <div class="body">
+    <span class="pill">Dynamic</span>
+    <h3>Dynamic Dinosaur</h3>
+    <p>Dinosaur</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/eager-eagle.html"
+   data-name="eager eagle"
+   data-trait="eager"
+   data-animal="eagle">
+  <div class="art"><img src="assets/eager-eagle/eager-eagle-classic-shrinkwrapped.webp" alt="Eager Eagle"></div>
+  <div class="body">
+    <span class="pill">Eager</span>
+    <h3>Eager Eagle</h3>
+    <p>Eagle</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/empathy-elephant.html"
+   data-name="empathy elephant"
+   data-trait="empathy"
+   data-animal="elephant">
+  <div class="art"><img src="assets/empathy-elephant/empathy-elephant-evolving-shrinkwrapped.webp" alt="Empathy Elephant"></div>
+  <div class="body">
+    <span class="pill">Empathy</span>
+    <h3>Empathy Elephant</h3>
+    <p>Elephant</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/energetic-electric-eel.html"
+   data-name="energetic electric eel"
+   data-trait="energetic"
+   data-animal="eel">
+  <div class="art"><img src="assets/energetic-electric-eel/core-energetic-electric-eel.webp" alt="Energetic Electric Eel"></div>
+  <div class="body">
+    <span class="pill">Energetic</span>
+    <h3>Energetic Electric Eel</h3>
+    <p>Eel</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/fearless-fairy.html"
+   data-name="fearless fairy"
+   data-trait="fearless"
+   data-animal="fairy">
+  <div class="art"><img src="assets/fearless-fairy/fearless-fairy.webp" alt="Fearless Fairy"></div>
+  <div class="body">
+    <span class="pill">Fearless</span>
+    <h3>Fearless Fairy</h3>
+    <p>Fairy</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/focused-falcon.html"
+   data-name="focused falcon"
+   data-trait="focused"
+   data-animal="falcon">
+  <div class="art"><img src="assets/focused-falcon/spec_series_2026_focused_falcon_numbered_gold_gold.webp" alt="Focused Falcon"></div>
+  <div class="body">
+    <span class="pill">Focused</span>
+    <h3>Focused Falcon</h3>
+    <p>Falcon</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/forgiving-horned-frog.html"
+   data-name="forgiving horned frog"
+   data-trait="forgiving"
+   data-animal="frog">
+  <div class="art"><img src="assets/forgiving-horned-frog/forgiving-horned-frog-competing-shrinkwrapped.webp" alt="Forgiving Horned Frog"></div>
+  <div class="body">
+    <span class="pill">Forgiving</span>
+    <h3>Forgiving Horned Frog</h3>
+    <p>Frog</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/genuine-giraffe.html"
+   data-name="genuine giraffe"
+   data-trait="genuine"
+   data-animal="giraffe">
+  <div class="art"><img src="assets/genuine-giraffe/genuine-giraffe-competing-shrinkwrapped.webp" alt="Genuine Giraffe"></div>
+  <div class="body">
+    <span class="pill">Genuine</span>
+    <h3>Genuine Giraffe</h3>
+    <p>Giraffe</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/gracious-grizzly-bear.html"
+   data-name="gracious grizzly bear"
+   data-trait="gracious"
+   data-animal="bear">
+  <div class="art"><img src="assets/gracious-grizzly-bear/gracious-grizzly-bear-evolving-shrinkwrapped.webp" alt="Gracious Grizzly Bear"></div>
+  <div class="body">
+    <span class="pill">Gracious</span>
+    <h3>Gracious Grizzly Bear</h3>
+    <p>Bear</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/gritty-ghost.html"
+   data-name="gritty ghost"
+   data-trait="gritty"
+   data-animal="ghost">
+  <div class="art"><img src="assets/gritty-ghost/spec_series_2026_gritty_ghost_numbered_emerald_bubblegum.webp" alt="Gritty Ghost"></div>
+  <div class="body">
+    <span class="pill">Gritty</span>
+    <h3>Gritty Ghost</h3>
+    <p>Ghost</p>
+    <span class="offline">Saved page</span>
+  </div>
+</a>
+<a class="card" href="characters/headstrong-honey-badger.html"
+   data-name="headstrong honey badger"
+   data-trait="headstrong"
+   data-animal="badger">
+  <div class="art"><img src="assets/headstrong-honey-badger/spec_series_2026_headstrong_honey_badger_base_emerald.webp" alt="Headstrong Honey Badger"></div>
+  <div class="body">
+    <span class="pill">Headstrong</span>
+    <h3>Headstrong Honey Badger</h3>
+    <p>Badger</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/helpful-hippo.html"
+   data-name="helpful hippo"
+   data-trait="helpful"
+   data-animal="hippo">
+  <div class="art"><img src="assets/helpful-hippo/helpful-hippo-classic-shrinkwrapped.webp" alt="Helpful Hippo"></div>
+  <div class="body">
+    <span class="pill">Helpful</span>
+    <h3>Helpful Hippo</h3>
+    <p>Hippo</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/hungry-hammerhead.html"
+   data-name="hungry hammerhead"
+   data-trait="hungry"
+   data-animal="hammerhead">
+  <div class="art"><img src="assets/hungry-hammerhead/hungry-hammerhead-competing-shrinkwrapped.webp" alt="Hungry Hammerhead"></div>
+  <div class="body">
+    <span class="pill">Hungry</span>
+    <h3>Hungry Hammerhead</h3>
+    <p>Hammerhead</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/independent-inch-worm.html"
+   data-name="independent inch worm"
+   data-trait="independent"
+   data-animal="worm">
+  <div class="art"><img src="assets/independent-inch-worm/independent-inch-worm-competing-shrinkwrapped.webp" alt="Independent Inch Worm"></div>
+  <div class="body">
+    <span class="pill">Independent</span>
+    <h3>Independent Inch Worm</h3>
+    <p>Worm</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/intuitive-iguana.html"
+   data-name="intuitive iguana"
+   data-trait="intuitive"
+   data-animal="iguana">
+  <div class="art"><img src="assets/intuitive-iguana/intuitive-iguana-evolving-shrinkwrapped.webp" alt="Intuitive Iguana"></div>
+  <div class="body">
+    <span class="pill">Intuitive</span>
+    <h3>Intuitive Iguana</h3>
+    <p>Iguana</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/joyous-jellyfish.html"
+   data-name="joyous jellyfish"
+   data-trait="joyous"
+   data-animal="jellyfish">
+  <div class="art"><img src="assets/joyous-jellyfish/joyous-jellyfish-manifesting-shrinkwrapped.webp" alt="Joyous Jellyfish"></div>
+  <div class="body">
+    <span class="pill">Joyous</span>
+    <h3>Joyous Jellyfish</h3>
+    <p>Jellyfish</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/just-jackal.html"
+   data-name="just jackal"
+   data-trait="just"
+   data-animal="jackal">
+  <div class="art"><img src="assets/just-jackal/diamond-just-jackal.webp" alt="Just Jackal"></div>
+  <div class="body">
+    <span class="pill">Just</span>
+    <h3>Just Jackal</h3>
+    <p>Jackal</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/keen-kingfisher.html"
+   data-name="keen kingfisher"
+   data-trait="keen"
+   data-animal="kingfisher">
+  <div class="art"><img src="assets/keen-kingfisher/lava-keen-kingfisher.webp" alt="Keen Kingfisher"></div>
+  <div class="body">
+    <span class="pill">Keen</span>
+    <h3>Keen Kingfisher</h3>
+    <p>Kingfisher</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/kind-warrior.html"
+   data-name="kind warrior"
+   data-trait="kind"
+   data-animal="warrior">
+  <div class="art"><img src="assets/kind-warrior/kind-warrior.webp" alt="Kind Warrior"></div>
+  <div class="body">
+    <span class="pill">Kind</span>
+    <h3>Kind Warrior</h3>
+    <p>Warrior</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/knowing-gnome.html"
+   data-name="knowing gnome"
+   data-trait="knowing"
+   data-animal="gnome">
+  <div class="art"><img src="assets/knowing-gnome/knowing-gnome-evolving-shrinkwrapped.webp" alt="Knowing Gnome"></div>
+  <div class="body">
+    <span class="pill">Knowing</span>
+    <h3>Knowing Gnome</h3>
+    <p>Gnome</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/like-a-sponge.html"
+   data-name="like a sponge"
+   data-trait="like"
+   data-animal="sponge">
+  <div class="art"><img src="assets/like-a-sponge/core-like-a-sponge.webp" alt="Like A Sponge"></div>
+  <div class="body">
+    <span class="pill">Like</span>
+    <h3>Like A Sponge</h3>
+    <p>Sponge</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/likeable-leopard.html"
+   data-name="likeable leopard"
+   data-trait="likeable"
+   data-animal="leopard">
+  <div class="art"><img src="assets/likeable-leopard/instagram(1).svg" alt="Likeable Leopard"></div>
+  <div class="body">
+    <span class="pill">Likeable</span>
+    <h3>Likeable Leopard</h3>
+    <p>Leopard</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/logical-lion.html"
+   data-name="logical lion"
+   data-trait="logical"
+   data-animal="lion">
+  <div class="art"><img src="assets/logical-lion/spec_series_2026_logical_lion_numbered_lava_bubblegum.webp" alt="Logical Lion"></div>
+  <div class="body">
+    <span class="pill">Logical</span>
+    <h3>Logical Lion</h3>
+    <p>Lion</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/methodical-mammoth.html"
+   data-name="methodical mammoth"
+   data-trait="methodical"
+   data-animal="mammoth">
+  <div class="art"><img src="assets/methodical-mammoth/veryrare-methodical-mammoth.webp" alt="Methodical Mammoth"></div>
+  <div class="body">
+    <span class="pill">Methodical</span>
+    <h3>Methodical Mammoth</h3>
+    <p>Mammoth</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/mindful-minokawa.html"
+   data-name="mindful minokawa"
+   data-trait="mindful"
+   data-animal="minokawa">
+  <div class="art"><img src="assets/mindful-minokawa/hologram-mindful-minokawa.webp" alt="Mindful Minokawa"></div>
+  <div class="body">
+    <span class="pill">Mindful</span>
+    <h3>Mindful Minokawa</h3>
+    <p>Minokawa</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/mojo-mouse.html"
+   data-name="mojo mouse"
+   data-trait="mojo"
+   data-animal="mouse">
+  <div class="art"><img src="assets/mojo-mouse/veryrare-mojo-mouse.webp" alt="Mojo Mouse"></div>
+  <div class="body">
+    <span class="pill">Mojo</span>
+    <h3>Mojo Mouse</h3>
+    <p>Mouse</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/moral-monkey.html"
+   data-name="moral monkey"
+   data-trait="moral"
+   data-animal="monkey">
+  <div class="art"><img src="assets/moral-monkey/diamond-moral-monkey.webp" alt="Moral Monkey"></div>
+  <div class="body">
+    <span class="pill">Moral</span>
+    <h3>Moral Monkey</h3>
+    <p>Monkey</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/noble-numbat.html"
+   data-name="noble numbat"
+   data-trait="noble"
+   data-animal="numbat">
+  <div class="art"><img src="assets/noble-numbat/noble-numbat.webp" alt="Noble Numbat"></div>
+  <div class="body">
+    <span class="pill">Noble</span>
+    <h3>Noble Numbat</h3>
+    <p>Numbat</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/optimistic-otter.html"
+   data-name="optimistic otter"
+   data-trait="optimistic"
+   data-animal="otter">
+  <div class="art"><img src="assets/optimistic-otter/epic-optimistic-otter.webp" alt="Optimistic Otter"></div>
+  <div class="body">
+    <span class="pill">Optimistic</span>
+    <h3>Optimistic Otter</h3>
+    <p>Otter</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/organized-ostrich.html"
+   data-name="organized ostrich"
+   data-trait="organized"
+   data-animal="ostrich">
+  <div class="art"><img src="assets/organized-ostrich/organized-ostrich-competing-shrinkwrapped.webp" alt="Organized Ostrich"></div>
+  <div class="body">
+    <span class="pill">Organized</span>
+    <h3>Organized Ostrich</h3>
+    <p>Ostrich</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/outgoing-octopus.html"
+   data-name="outgoing octopus"
+   data-trait="outgoing"
+   data-animal="octopus">
+  <div class="art"><img src="assets/outgoing-octopus/outgoing-octopus-classic-shrinkwrapped.webp" alt="Outgoing Octopus"></div>
+  <div class="body">
+    <span class="pill">Outgoing</span>
+    <h3>Outgoing Octopus</h3>
+    <p>Octopus</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/patient-panda.html"
+   data-name="patient panda"
+   data-trait="patient"
+   data-animal="panda">
+  <div class="art"><img src="assets/patient-panda/patient-panda-manifesting-shrinkwrapped.webp" alt="Patient Panda"></div>
+  <div class="body">
+    <span class="pill">Patient</span>
+    <h3>Patient Panda</h3>
+    <p>Panda</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/persistent-penguin.html"
+   data-name="persistent penguin"
+   data-trait="persistent"
+   data-animal="penguin">
+  <div class="art"><img src="assets/persistent-penguin/persistent-penguin.webp" alt="Persistent Penguin"></div>
+  <div class="body">
+    <span class="pill">Persistent</span>
+    <h3>Persistent Penguin</h3>
+    <p>Penguin</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/perspective-pigeon.html"
+   data-name="perspective pigeon"
+   data-trait="perspective"
+   data-animal="pigeon">
+  <div class="art"><img src="assets/perspective-pigeon/perspective-pigeon-evolving-shrinkwrapped.webp" alt="Perspective Pigeon"></div>
+  <div class="body">
+    <span class="pill">Perspective</span>
+    <h3>Perspective Pigeon</h3>
+    <p>Pigeon</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/productive-puffin.html"
+   data-name="productive puffin"
+   data-trait="productive"
+   data-animal="puffin">
+  <div class="art"><img src="assets/productive-puffin/productive-puffin-manifesting-shrinkwrapped.webp" alt="Productive Puffin"></div>
+  <div class="body">
+    <span class="pill">Productive</span>
+    <h3>Productive Puffin</h3>
+    <p>Puffin</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/reflective-rhinoceros.html"
+   data-name="reflective rhinoceros"
+   data-trait="reflective"
+   data-animal="rhinoceros">
+  <div class="art"><img src="assets/reflective-rhinoceros/reflective-rhinoceros-classic-shrinkwrapped.webp" alt="Reflective Rhinoceros"></div>
+  <div class="body">
+    <span class="pill">Reflective</span>
+    <h3>Reflective Rhinoceros</h3>
+    <p>Rhinoceros</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/reliable-rat.html"
+   data-name="reliable rat"
+   data-trait="reliable"
+   data-animal="rat">
+  <div class="art"><img src="assets/reliable-rat/reliable-rat-classic-shrinkwrapped.webp" alt="Reliable Rat"></div>
+  <div class="body">
+    <span class="pill">Reliable</span>
+    <h3>Reliable Rat</h3>
+    <p>Rat</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/respectful-racoon.html"
+   data-name="respectful racoon"
+   data-trait="respectful"
+   data-animal="racoon">
+  <div class="art"><img src="assets/respectful-racoon/respectful-racoon-competing-shrinkwrapped.webp" alt="Respectful Racoon"></div>
+  <div class="body">
+    <span class="pill">Respectful</span>
+    <h3>Respectful Racoon</h3>
+    <p>Racoon</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/secure-sparrow.html"
+   data-name="secure sparrow"
+   data-trait="secure"
+   data-animal="sparrow">
+  <div class="art"><img src="assets/secure-sparrow/secure-sparrow.webp" alt="Secure Sparrow"></div>
+  <div class="body">
+    <span class="pill">Secure</span>
+    <h3>Secure Sparrow</h3>
+    <p>Sparrow</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/selfless-sloth.html"
+   data-name="selfless sloth"
+   data-trait="selfless"
+   data-animal="sloth">
+  <div class="art"><img src="assets/selfless-sloth/selfless-sloth-competing-shrinkwrapped.webp" alt="Selfless Sloth"></div>
+  <div class="body">
+    <span class="pill">Selfless</span>
+    <h3>Selfless Sloth</h3>
+    <p>Sloth</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/sharing-squirrel.html"
+   data-name="sharing squirrel"
+   data-trait="sharing"
+   data-animal="squirrel">
+  <div class="art"><img src="assets/sharing-squirrel/sharing-squirrel-classic-shrinkwrapped.webp" alt="Sharing Squirrel"></div>
+  <div class="body">
+    <span class="pill">Sharing</span>
+    <h3>Sharing Squirrel</h3>
+    <p>Squirrel</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/skilled-skeleton.html"
+   data-name="skilled skeleton"
+   data-trait="skilled"
+   data-animal="skeleton">
+  <div class="art"><img src="assets/skilled-skeleton/skilled-skeleton-competing-shrinkwrapped.webp" alt="Skilled Skeleton"></div>
+  <div class="body">
+    <span class="pill">Skilled</span>
+    <h3>Skilled Skeleton</h3>
+    <p>Skeleton</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/stoic-slime.html"
+   data-name="stoic slime"
+   data-trait="stoic"
+   data-animal="slime">
+  <div class="art"><img src="assets/stoic-slime/stoic-slime-competing-shrinkwrapped.webp" alt="Stoic Slime"></div>
+  <div class="body">
+    <span class="pill">Stoic</span>
+    <h3>Stoic Slime</h3>
+    <p>Slime</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/tenacious-turkey.html"
+   data-name="tenacious turkey"
+   data-trait="tenacious"
+   data-animal="turkey">
+  <div class="art"><img src="assets/tenacious-turkey/tenacious-turkey.webp" alt="Tenacious Turkey"></div>
+  <div class="body">
+    <span class="pill">Tenacious</span>
+    <h3>Tenacious Turkey</h3>
+    <p>Turkey</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/tolerant-tortoise.html"
+   data-name="tolerant tortoise"
+   data-trait="tolerant"
+   data-animal="tortoise">
+  <div class="art"><img src="assets/tolerant-tortoise/tolerant-tortoise-manifesting-shrinkwrapped.webp" alt="Tolerant Tortoise"></div>
+  <div class="body">
+    <span class="pill">Tolerant</span>
+    <h3>Tolerant Tortoise</h3>
+    <p>Tortoise</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/tranquil-toad.html"
+   data-name="tranquil toad"
+   data-trait="tranquil"
+   data-animal="toad">
+  <div class="art"><img src="assets/tranquil-toad/tranquil-toad-evolving-shrinkwrapped.webp" alt="Tranquil Toad"></div>
+  <div class="body">
+    <span class="pill">Tranquil</span>
+    <h3>Tranquil Toad</h3>
+    <p>Toad</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/unwavering-urchin.html"
+   data-name="unwavering urchin"
+   data-trait="unwavering"
+   data-animal="urchin">
+  <div class="art"><img src="assets/unwavering-urchin/unwavering-urchin-manifesting-shrinkwrapped.webp" alt="Unwavering Urchin"></div>
+  <div class="body">
+    <span class="pill">Unwavering</span>
+    <h3>Unwavering Urchin</h3>
+    <p>Urchin</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/well-rounded-warthog.html"
+   data-name="well-rounded warthog"
+   data-trait="well-rounded"
+   data-animal="warthog">
+  <div class="art"><img src="assets/well-rounded-warthog/well-rounded-warthog.webp" alt="Well-Rounded Warthog"></div>
+  <div class="body">
+    <span class="pill">Well-Rounded</span>
+    <h3>Well-Rounded Warthog</h3>
+    <p>Warthog</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/whimsical-wolf.html"
+   data-name="whimsical wolf"
+   data-trait="whimsical"
+   data-animal="wolf">
+  <div class="art"><img src="assets/whimsical-wolf/veryrare-whimsical-wolf.webp" alt="Whimsical Wolf"></div>
+  <div class="body">
+    <span class="pill">Whimsical</span>
+    <h3>Whimsical Wolf</h3>
+    <p>Wolf</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a>
+<a class="card" href="characters/willfull-wizard.html"
+   data-name="willfull wizard"
+   data-trait="willfull"
+   data-animal="wizard">
+  <div class="art"><img src="assets/willfull-wizard/instagram(1).svg" alt="Willfull Wizard"></div>
+  <div class="body">
+    <span class="pill">Willfull</span>
+    <h3>Willfull Wizard</h3>
+    <p>Wizard</p>
+    <span class="offline">Saved page + assets</span>
+  </div>
+</a></section><div class="empty" id="empty">No characters match those filters.</div></main>
 <script>
-const q=document.getElementById('q'), items=[...document.querySelectorAll('.card')], count=document.getElementById('count');
-q.addEventListener('input',()=>{
-  let n=0;
-  items.forEach(x=>{
-    const show=x.innerText.toLowerCase().includes(q.value.toLowerCase());
-    x.hidden=!show; if(show)n++;
-  });
-  count.textContent=n+(n===1?' character':' characters');
-});
+const cards=[...document.querySelectorAll('.card')],q=document.getElementById('q'),trait=document.getElementById('trait'),animal=document.getElementById('animal'),count=document.getElementById('count'),empty=document.getElementById('empty');
+function run(){
+ let n=0,s=q.value.toLowerCase().trim();
+ cards.forEach(c=>{const show=(!s||c.dataset.name.includes(s))&&(!trait.value||c.dataset.trait===trait.value)&&(!animal.value||c.dataset.animal===animal.value);c.hidden=!show;if(show)n++;});
+ count.textContent=n+(n===1?' character':' characters');empty.style.display=n?'none':'block';
+}
+[q,trait,animal].forEach(x=>x.addEventListener('input',run));
 </script>
-</body>
-</html>
+</body></html>
